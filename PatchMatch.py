@@ -121,8 +121,13 @@ if __name__ == "__main__":
     ref = np.array(Image.open("./cup_b.jpg"))
     p_size = 3
     itr = 5
+    import time
     start = time.time()
     f = NNS(img, ref, p_size, itr)
     end = time.time()
     print(end - start)
-    reconstruction(f, img, ref)
+    # Instead of Image.fromarray(temp).show():
+    result = reconstruct(f, img, ref)  # Modify your function to return the result array
+    plt.imshow(result.astype(np.uint8))
+    plt.axis('off')
+    plt.show()
