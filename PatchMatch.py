@@ -20,7 +20,7 @@ def reconstruction(f, A, B):
             if f[i, j][0] < B.shape[0] and f[i, j][1] < B.shape[1]:  # Ensure valid index
                 temp[i, j, :] = B[f[i, j][0], f[i, j][1], :]
 
-    return temp  # Return reconstructed image instead of showing it directly
+    return temp  # Return reconstructed image
 
 def initialization(A, B, p_size):
     A_h, A_w = A.shape[:2]
@@ -45,6 +45,34 @@ def initialization(A, B, p_size):
 
     return f, dist, A_padding
 
+def propagation(f, a, dist, A_padding, B, p_size, is_odd):
+    A_h, A_w = A_padding.shape[:2] - np.array([p_size-1, p_size-1])
+    x, y = a
+
+    if is_odd:
+        d_left = dist[max(x-1, 0), y]
+        d_up = dist[x, max(y-1, 0)]
+        d_current = dist[x, y]
+        idx = np.argmin([d_current, d_left, d_up])
+
+        if idx == 1:
+            f[x, y] = f[max(x - 1, 0), y]
+        elif idx == 2:
+            f[x, y] = f[x, max(y - 1, 0)]
+        
+    else:
+        d_right = dist[min(x + 1, A_h-1), y]
+        d_down = dist[x, min(y + 1, A_w-1)]
+        d_current = dist[x, y]
+        idx = np.argmin([d_current, d_right, d_down])
+
+        if idx == 1:
+            f[x, y] = f[min(x + 1, A_h-1), y]
+        elif idx == 2:
+            f[x, y] = f[x, min(y + 1, A_w-1)]
+
+    dist[x, y] = cal_distance(a, f[x, y], A_padding, B, p_size)
+
 def NNS(img, ref, p_size, itr):
     A_h, A_w = img.shape[:2]
     f, dist, img_padding = initialization(img, ref, p_size)
@@ -57,8 +85,7 @@ def NNS(img, ref, p_size, itr):
                     propagation(f, a, dist, img_padding, ref, p_size, True)
                 else:  # Even iteration
                     propagation(f, a, dist, img_padding, ref, p_size, False)
-                random_search(f, a, dist, img_padding, ref, p_size)
-        
+
         print(f"Iteration: {iteration}")
 
     return f
