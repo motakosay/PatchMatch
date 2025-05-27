@@ -105,6 +105,13 @@ if __name__ == "__main__":
     print(f"Time taken: {end - start:.2f} seconds")
     
     result = reconstruction(f, img, ref)  # Now returns an array
+
+    # Display the image correctly
+    plt.figure(figsize=(8, 6))  # Set figure size
     plt.imshow(result.astype(np.uint8))
     plt.axis("off")
     plt.show()
+
+    # Save image as an alternative for inspection
+    Image.fromarray(result.astype(np.uint8)).save("output.png")
+    print("Image saved as output.png")
