@@ -1,3 +1,4 @@
+#this program its results look like one of filters of photoshop
 import numpy as np
 from PIL import Image
 import matplotlib.pyplot as plt
