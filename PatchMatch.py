@@ -1,6 +1,7 @@
 import numpy as np
 from PIL import Image
 import time
+import matplotlib.pyplot as plt
 
 def cal_distance(a, b, A_padding, B, p_size):
     p = p_size // 2
