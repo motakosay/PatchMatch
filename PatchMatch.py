@@ -127,7 +127,7 @@ if __name__ == "__main__":
     end = time.time()
     print(end - start)
     # Instead of Image.fromarray(temp).show():
-    result = reconstruct(f, img, ref)  # Modify your function to return the result array
+    result = reconstruction(f, img, ref)  # Modify your function to return the result array
     plt.imshow(result.astype(np.uint8))
     plt.axis('off')
     plt.show()
